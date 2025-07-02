@@ -47,5 +47,8 @@
       "require": "./dist/index.js"
     },
     "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "provenance": true
   }
 }
