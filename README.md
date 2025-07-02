@@ -44,6 +44,9 @@ This rule enforces using namespace imports and exports for zod instead of named 
 // Importing z directly
 import { z } from "zod";
 
+// Importing z from 'zod/v4'
+import { z } from "zod/v4";
+
 // Type-only imports
 import type { z } from "zod";
 
@@ -68,6 +71,9 @@ export { ZodError, z } from "zod";
 ```js
 // Using namespace import
 import * as z from "zod";
+
+// Importing z from 'zod/v4'
+import * as z from "zod/v4";
 
 // Using type namespace import
 import type * as z from "zod";
