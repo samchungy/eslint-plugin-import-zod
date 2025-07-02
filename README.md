@@ -1,5 +1,7 @@
 # eslint-plugin-import-zod
 
+<a href="https://www.npmjs.com/package/eslint-plugin-import-zod"><img src="https://img.shields.io/npm/v/eslint-plugin-import-zod"/></a>
+
 ESLint plugin to enforce namespace imports for zod. This plugin provides a rule that ensures all imports and exports of zod use the namespace import style (`import * as z from "zod";`) instead of named imports or exports to promote better tree-shaking and reduce bundle sizes.
 
 ## Installation
