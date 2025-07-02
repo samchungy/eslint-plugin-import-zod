@@ -1,5 +1,11 @@
 # eslint-plugin-import-zod
 
+## 1.0.2
+
+### Patch Changes
+
+- 7cfe445: Publish with provenance
+
 ## 1.0.1
 
 ### Patch Changes
