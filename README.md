@@ -78,11 +78,6 @@ import { ZodError } from "zod";
 
 // Type imports that don't include 'z'
 import type { ZodError } from "zod";
-
-// All export patterns are valid
-export * as z from "zod";
-export { z } from "zod";
-export { ZodError } from "zod";
 ```
 
 #### Auto-fix
