@@ -3,7 +3,7 @@ import { ESLintUtils } from "@typescript-eslint/utils";
 
 const createRule = ESLintUtils.RuleCreator(
   (name: string) =>
-    `https://github.com/yourusername/eslint-plugin-import-zod/blob/main/docs/rules/${name}.md`
+    `https://github.com/samchungy/eslint-plugin-import-zod/blob/main/docs/rules/${name}.md`
 );
 
 export default createRule({
