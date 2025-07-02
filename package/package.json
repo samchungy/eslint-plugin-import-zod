@@ -1,0 +1,44 @@
+{
+  "name": "eslint-plugin-import-zod",
+  "version": "1.0.0",
+  "description": "ESLint plugin to enforce namespace imports for zod",
+  "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "zod",
+    "imports"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/eslint": "^8.56.0",
+    "@types/estree": "^1.0.1",
+    "@types/node": "^20.5.7",
+    "@typescript-eslint/rule-tester": "^8.35.1",
+    "@typescript-eslint/utils": "^8.35.1",
+    "eslint": "^9.30.1",
+    "tsdown": "0.12.9",
+    "typescript": "^5.2.2",
+    "vitest": "^3.2.4"
+  },
+  "peerDependencies": {
+    "@typescript-eslint/utils": "^8.35.1",
+    "eslint": ">=9"
+  },
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "build": "tsdown"
+  }
+}
