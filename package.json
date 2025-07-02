@@ -3,6 +3,7 @@
   "version": "1.0.2",
   "description": "ESLint plugin to enforce namespace imports for zod",
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/samchungy/eslint-plugin-import-zod.git"

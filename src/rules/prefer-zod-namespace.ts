@@ -76,7 +76,8 @@ export default createRule({
 
               // Create a namespace import for 'z'
               const typePrefix = isTypeOnlyImport ? "type " : "";
-              const namespaceImport = `import ${typePrefix}* as ${localName} from 'zod';\n`;
+              const importSource = node.source.value; // Preserve the original import source ('zod' or 'zod/v4')
+              const namespaceImport = `import ${typePrefix}* as ${localName} from '${importSource}';\n`;
 
               // Create a new import for the other specifiers
               const otherImport = `import ${
@@ -95,7 +96,7 @@ export default createRule({
                     ? `${typeModifier}${importedName}`
                     : `${typeModifier}${importedName} as ${localName}`;
                 })
-                .join(", ")} } from 'zod';`;
+                .join(", ")} } from '${importSource}';`;
 
               // Replace the entire import declaration
               return fixer.replaceText(
@@ -107,9 +108,10 @@ export default createRule({
               // Check if this is a type-only import
               const isTypeOnlyImport = node.importKind === "type";
               const typePrefix = isTypeOnlyImport ? "type " : "";
+              const importSource = node.source.value; // Preserve the original import source ('zod' or 'zod/v4')
               return fixer.replaceText(
                 node,
-                `import ${typePrefix}* as ${localName} from 'zod';`
+                `import ${typePrefix}* as ${localName} from '${importSource}';`
               );
             }
           },
@@ -118,8 +120,11 @@ export default createRule({
 
       // Handle export declarations that re-export from zod
       ExportNamedDeclaration(node: TSESTree.ExportNamedDeclaration) {
-        // Only target exports from 'zod'
-        if (!node.source || node.source.value !== "zod") {
+        // Only target exports from 'zod' or 'zod/v4'
+        if (
+          !node.source ||
+          (node.source.value !== "zod" && node.source.value !== "zod/v4")
+        ) {
           return;
         }
 
@@ -167,7 +172,8 @@ export default createRule({
                 zSpecifier.exported.type === TSESTree.AST_NODE_TYPES.Identifier
                   ? zSpecifier.exported.name
                   : "";
-              const namespaceExport = `export * as ${exportedName} from 'zod';`;
+              const exportSource = node.source.value; // Preserve the original source
+              const namespaceExport = `export * as ${exportedName} from '${exportSource}';`;
 
               // Create a new export for the other specifiers
               const otherExport = `export { ${otherSpecifiers
@@ -184,7 +190,7 @@ export default createRule({
                     ? exportedName
                     : `${localName} as ${exportedName}`;
                 })
-                .join(", ")} } from 'zod';`;
+                .join(", ")} } from '${exportSource}';`;
 
               // Replace the entire export declaration
               return fixer.replaceText(
@@ -197,9 +203,10 @@ export default createRule({
                 zSpecifier.exported.type === TSESTree.AST_NODE_TYPES.Identifier
                   ? zSpecifier.exported.name
                   : "";
+              const exportSource = node.source.value; // Preserve the original source
               return fixer.replaceText(
                 node,
-                `export * as ${exportedName} from 'zod';`
+                `export * as ${exportedName} from '${exportSource}';`
               );
             }
           },

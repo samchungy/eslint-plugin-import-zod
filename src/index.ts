@@ -10,20 +10,25 @@ const plugin = {
   rules: {
     "prefer-zod-namespace": preferZodNamespace,
   },
-  configs: {},
-} satisfies TSESLint.Linter.Plugin;
+  configs: {} as {
+    recommended: TSESLint.FlatConfig.ConfigArray;
+  },
+};
 
-Object.assign(plugin.configs, {
-  recommended: [
-    {
-      plugins: {
-        "import-zod": plugin,
+Object.assign(
+  plugin.configs as NonNullable<TSESLint.Linter.Plugin["configs"]>,
+  {
+    recommended: [
+      {
+        plugins: {
+          "import-zod": plugin,
+        },
+        rules: {
+          "import-zod/prefer-zod-namespace": "error",
+        },
       },
-      rules: {
-        "import-zod/prefer-zod-namespace": "error",
-      },
-    },
-  ] satisfies TSESLint.FlatConfig.ConfigArray,
-});
+    ] satisfies TSESLint.FlatConfig.ConfigArray,
+  }
+);
 
 export = plugin;
