@@ -9,7 +9,8 @@
   },
   "scripts": {
     "test": "vitest run",
-    "build": "tsdown"
+    "build": "tsdown",
+    "publish": "pnpm build && changeset publish"
   },
   "files": [
     "dist"
