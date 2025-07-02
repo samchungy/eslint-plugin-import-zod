@@ -5,7 +5,7 @@ ESLint plugin to enforce namespace imports for zod. This plugin provides a rule 
 ## Installation
 
 ```bash
-npm install eslint-plugin-import-zod --save-dev
+pnpm add -D eslint-plugin-import-zod
 ```
 
 ## Usage
