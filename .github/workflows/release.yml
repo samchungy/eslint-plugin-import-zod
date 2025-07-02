@@ -8,6 +8,9 @@ on:
 
 jobs:
   release:
+    permissions:
+      contents: write
+      id-token: write
     name: Release
     runs-on: ubuntu-latest
     env:

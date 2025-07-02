@@ -4,6 +4,9 @@ on: workflow_dispatch
 
 jobs:
   publish:
+    permissions:
+      contents: write
+      id-token: write
     name: Publish snapshot version
     runs-on: ubuntu-latest
     env:
