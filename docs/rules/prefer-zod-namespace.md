@@ -1,10 +1,10 @@
 # Enforce namespace imports for zod (prefer-zod-namespace)
 
-This rule enforces using namespace imports and exports for zod instead of named imports and exports. Using namespace imports results in better tree-shaking and reduced bundle sizes.
+This rule enforces using namespace imports for zod instead of named imports. Using namespace imports results in better tree-shaking and reduced bundle sizes.
 
 ## Rule Details
 
-This rule aims to enforce a consistent pattern for importing and exporting zod.
+This rule aims to enforce a consistent pattern for importing zod.
 
 ### ❌ Invalid
 
@@ -23,15 +23,6 @@ import { ZodError, z } from "zod";
 
 // Type-only imports with multiple exports
 import type { ZodError, z } from "zod";
-
-// Re-exporting z directly
-export { z } from "zod";
-
-// Re-exporting z along with other exports
-export { ZodError, z } from "zod";
-
-// Re-exporting z with a different name
-export { z as zodSchema } from "zod";
 ```
 
 ### ✅ Valid
@@ -48,12 +39,6 @@ import { ZodError } from "zod";
 
 // Type imports that don't include 'z'
 import type { ZodError } from "zod";
-
-// Re-exporting z as a namespace
-export * as z from "zod";
-
-// Re-exporting other exports that don't include 'z'
-export { ZodError } from "zod";
 ```
 
 ## Options

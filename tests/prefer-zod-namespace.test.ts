@@ -28,12 +28,6 @@ ruleTester.run("prefer-zod-namespace-import", rule, {
     "import zod from 'zod';",
     // Imports from other modules are valid
     "import { z } from 'not-zod';",
-    // Namespace export is valid
-    "export * as z from 'zod';",
-    // Other exports from zod that don't include 'z' are valid
-    "export { toJSONSchema } from 'zod';",
-    // Exports from other modules are valid
-    "export { z } from 'not-zod';",
   ],
   invalid: [
     // Import cases
@@ -91,39 +85,6 @@ ruleTester.run("prefer-zod-namespace-import", rule, {
       code: "import { z, toJSONSchema } from 'zod';",
       output: "import * as z from 'zod';\nimport { toJSONSchema } from 'zod';",
       errors: [{ messageId: "preferNamespaceImport" }],
-    },
-
-    // Export cases
-    // Simple case: only z is exported
-    {
-      code: "export { z } from 'zod';",
-      output: "export * as z from 'zod';",
-      errors: [{ messageId: "preferNamespaceExport" }],
-    },
-    // Export from zod/v4
-    {
-      code: "export { z } from 'zod/v4';",
-      output: "export * as z from 'zod/v4';",
-      errors: [{ messageId: "preferNamespaceExport" }],
-    },
-    // Complex case: z is exported along with other exports
-    {
-      code: "export { toJSONSchema, z } from 'zod';",
-      output: "export * as z from 'zod';\nexport { toJSONSchema } from 'zod';",
-      errors: [{ messageId: "preferNamespaceExport" }],
-    },
-    // Case with renamed export
-    {
-      code: "export { z as zodSchema } from 'zod';",
-      output: "export * as zodSchema from 'zod';",
-      errors: [{ messageId: "preferNamespaceExport" }],
-    },
-    // Complex case with renamed exports
-    {
-      code: "export { toJSONSchema as schema, z } from 'zod';",
-      output:
-        "export * as z from 'zod';\nexport { toJSONSchema as schema } from 'zod';",
-      errors: [{ messageId: "preferNamespaceExport" }],
     },
   ],
 });
