@@ -1,5 +1,11 @@
 # eslint-plugin-import-zod
 
+## 1.0.3
+
+### Patch Changes
+
+- 4e9d57e: Fix perservation of 'zod/v4' imports
+
 ## 1.0.2
 
 ### Patch Changes
