@@ -10,7 +10,7 @@
   "scripts": {
     "test": "vitest run",
     "build": "tsdown",
-    "publish": "pnpm build && changeset publish"
+    "release": "pnpm build && changeset publish"
   },
   "files": [
     "dist"
@@ -50,5 +50,8 @@
   },
   "publishConfig": {
     "provenance": true
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

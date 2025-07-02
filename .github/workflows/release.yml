@@ -39,7 +39,7 @@ jobs:
       - name: Release
         uses: changesets/action@v1
         with:
-          publish: pnpm publish
+          publish: pnpm release
           version: pnpm changeset version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
