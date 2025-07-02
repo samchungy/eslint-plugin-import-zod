@@ -19,6 +19,7 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@changesets/cli": "^2.29.5",
     "@types/eslint": "^8.56.0",
     "@types/estree": "^1.0.1",
     "@types/node": "^20.5.7",
@@ -41,5 +42,8 @@
       "require": "./dist/index.js"
     },
     "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "provenance": true
   }
 }
