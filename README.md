@@ -48,6 +48,9 @@ import { z } from "zod";
 // Importing z from 'zod/v4'
 import { z } from "zod/v4";
 
+// Importing z from 'zod/v4-mini'
+import { z } from "zod/v4-mini";
+
 // Type-only imports
 import type { z } from "zod";
 
@@ -69,6 +72,9 @@ import * as z from "zod";
 
 // Importing z from 'zod/v4'
 import * as z from "zod/v4";
+
+// Importing z from 'zod/v4-mini'
+import * as z from "zod/v4-mini";
 
 // Using type namespace import
 import type * as z from "zod";
