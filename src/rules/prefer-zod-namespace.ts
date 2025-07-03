@@ -28,7 +28,7 @@ export default createRule({
       // Handle import declarations
       ImportDeclaration(node: TSESTree.ImportDeclaration) {
         // Only target imports from 'zod'
-        if (node.source.value !== "zod" && node.source.value !== "zod/v4") {
+        if (node.source.value.match(/^(zod|zod\/.*)$/) === null) {
           return;
         }
 

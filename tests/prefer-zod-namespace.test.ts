@@ -17,7 +17,11 @@ ruleTester.run("prefer-zod-namespace-import", rule, {
     // Namespace import is valid
     "import * as z from 'zod';",
     // Namespace import is valid
+    "import * as z from 'zod/v3';",
+    // Namespace import is valid
     "import * as z from 'zod/v4';",
+    // Namespace import is valid
+    "import * as z from 'zod/v4-mini';",
     // Type namespace import is valid
     "import type * as z from 'zod';",
     // Other imports from zod that don't include 'z' are valid
@@ -40,6 +44,16 @@ ruleTester.run("prefer-zod-namespace-import", rule, {
     {
       code: "import { z } from 'zod/v4';",
       output: "import * as z from 'zod/v4';",
+      errors: [{ messageId: "preferNamespaceImport" }],
+    },
+    {
+      code: "import { z } from 'zod/v4-mini';",
+      output: "import * as z from 'zod/v4-mini';",
+      errors: [{ messageId: "preferNamespaceImport" }],
+    },
+    {
+      code: "import { z } from 'zod/v3';",
+      output: "import * as z from 'zod/v3';",
       errors: [{ messageId: "preferNamespaceImport" }],
     },
     // Type-only import case
