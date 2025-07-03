@@ -1,5 +1,11 @@
 # eslint-plugin-import-zod
 
+## 1.0.5
+
+### Patch Changes
+
+- b15b722: Apply plugin to all Zod subpath imports
+
 ## 1.0.4
 
 ### Patch Changes
