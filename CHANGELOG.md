@@ -1,5 +1,11 @@
 # eslint-plugin-import-zod
 
+## 1.1.0
+
+### Minor Changes
+
+- b32eff0: Prefer `core` subpath import
+
 ## 1.0.5
 
 ### Patch Changes
