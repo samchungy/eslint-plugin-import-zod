@@ -23,6 +23,9 @@ import { ZodError, z } from "zod";
 
 // Type-only imports with multiple exports
 import type { ZodError, z } from "zod";
+
+// Importing core from zod/v4
+import { core } from "zod/v4";
 ```
 
 ### ✅ Valid
@@ -39,6 +42,9 @@ import { ZodError } from "zod";
 
 // Type imports that don't include 'z'
 import type { ZodError } from "zod";
+
+// Importing core as namespace from proper path
+import * as core from "zod/v4/core";
 ```
 
 ## Options
@@ -47,4 +53,4 @@ This rule has no options.
 
 ## When Not To Use It
 
-You should not use this rule if you prefer to use named imports for zod or if you have a specific reason to import `z` directly.
+You should not use this rule if you prefer to use named imports for zod or if you have a specific reason to import `z` directly`.

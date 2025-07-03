@@ -22,6 +22,8 @@ ruleTester.run("prefer-zod-namespace-import", rule, {
     "import * as z from 'zod/v4';",
     // Namespace import is valid
     "import * as z from 'zod/v4-mini';",
+    // Namespace import for submodules
+    "import * as core from 'zod/v4/core';",
     // Type namespace import is valid
     "import type * as z from 'zod';",
     // Other imports from zod that don't include 'z' are valid
@@ -54,6 +56,28 @@ ruleTester.run("prefer-zod-namespace-import", rule, {
     {
       code: "import { z } from 'zod/v3';",
       output: "import * as z from 'zod/v3';",
+      errors: [{ messageId: "preferNamespaceImport" }],
+    },
+    // Submodule imports from zod/v4
+    {
+      code: "import { core } from 'zod/v4';",
+      output: "import * as core from 'zod/v4/core';",
+      errors: [{ messageId: "preferNamespaceImport" }],
+    },
+    {
+      code: "import { core as zodCore } from 'zod/v4';",
+      output: "import * as zodCore from 'zod/v4/core';",
+      errors: [{ messageId: "preferNamespaceImport" }],
+    },
+    {
+      code: "import type { core } from 'zod/v4';",
+      output: "import type * as core from 'zod/v4/core';",
+      errors: [{ messageId: "preferNamespaceImport" }],
+    },
+    {
+      code: "import { toJSONSchema, core } from 'zod/v4';",
+      output:
+        "import * as core from 'zod/v4/core';\nimport { toJSONSchema } from 'zod/v4';",
       errors: [{ messageId: "preferNamespaceImport" }],
     },
     // Type-only import case

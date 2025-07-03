@@ -6,6 +6,26 @@ const createRule = ESLintUtils.RuleCreator(
     `https://github.com/samchungy/eslint-plugin-import-zod/blob/main/docs/rules/${name}.md`
 );
 
+const getImportSource = (
+  importedName: string,
+  originalSource: string
+): string => {
+  return importedName === "core" && originalSource === "zod/v4"
+    ? `${originalSource}/${importedName}`
+    : originalSource;
+};
+
+const isAllSameSubmodule = (
+  specifiers: TSESTree.ImportSpecifier[],
+  targetName: string
+): boolean => {
+  return specifiers.every(
+    (s) =>
+      s.imported.type === TSESTree.AST_NODE_TYPES.Identifier &&
+      s.imported.name === targetName
+  );
+};
+
 export default createRule({
   name: "prefer-zod-namespace",
   meta: {
@@ -27,8 +47,11 @@ export default createRule({
     return {
       // Handle import declarations
       ImportDeclaration(node: TSESTree.ImportDeclaration) {
-        // Only target imports from 'zod'
-        if (node.source.value.match(/^(zod|zod\/.*)$/) === null) {
+        // Only target imports from 'zod' or 'zod/*'
+        if (
+          node.source.value !== "zod" &&
+          !node.source.value.startsWith("zod/")
+        ) {
           return;
         }
 
@@ -43,77 +66,93 @@ export default createRule({
           return;
         }
 
-        // Find 'z' imports specifically
-        const zSpecifier = namedSpecifiers.find(
-          (specifier: TSESTree.ImportSpecifier) =>
+        // Find 'z' or 'core' imports specifically
+        const zodSpecifiers = namedSpecifiers.filter(
+          (
+            specifier: TSESTree.ImportSpecifier
+          ): specifier is TSESTree.ImportSpecifier & {
+            imported: TSESTree.Identifier;
+          } =>
             specifier.imported.type === TSESTree.AST_NODE_TYPES.Identifier &&
-            specifier.imported.name === "z"
+            (specifier.imported.name === "z" ||
+              specifier.imported.name === "core")
         );
 
-        // If there's no 'z' import, we don't need to do anything
-        if (!zSpecifier) {
+        // If there's no 'z' or 'core' import, we don't need to do anything
+        if (zodSpecifiers.length === 0) {
           return;
         }
 
-        // Get the local name of the import (in case it's renamed)
-        const localName = zSpecifier.local.name;
+        // Handle each zod specifier
+        for (const zodSpecifier of zodSpecifiers) {
+          // Get the local name of the import (in case it's renamed)
+          const localName = zodSpecifier.local.name;
+          const importedName = zodSpecifier.imported.name;
+          const importSource = getImportSource(importedName, node.source.value);
+          const isSubmoduleImport = importSource !== node.source.value;
 
-        // Report the issue
-        context.report({
-          node: zSpecifier,
-          messageId: "preferNamespaceImport",
-          fix(fixer) {
-            // If there are other named imports from 'zod', we need to handle them differently
-            if (namedSpecifiers.length > 1) {
-              const otherSpecifiers = namedSpecifiers.filter(
-                (s: TSESTree.ImportSpecifier) => s !== zSpecifier
-              );
+          // Report the issue
+          context.report({
+            node: zodSpecifier,
+            messageId: "preferNamespaceImport",
+            fix(fixer) {
+              // If this is the only specifier or all specifiers are for the same submodule
+              if (
+                namedSpecifiers.length === 1 ||
+                (isSubmoduleImport &&
+                  isAllSameSubmodule(namedSpecifiers, importedName))
+              ) {
+                // Simple case: just replace with a namespace import
+                const isTypeOnlyImport = node.importKind === "type";
+                const typePrefix = isTypeOnlyImport ? "type " : "";
+                return fixer.replaceText(
+                  node,
+                  `import ${typePrefix}* as ${localName} from '${importSource}';`
+                );
+              } else {
+                // Handle the case where we need to split imports
+                const otherSpecifiers = namedSpecifiers.filter(
+                  (s) => s !== zodSpecifier
+                );
 
-              // Check if this is a type-only import
-              const isTypeOnlyImport = node.importKind === "type";
+                // Check if this is a type-only import
+                const isTypeOnlyImport = node.importKind === "type";
 
-              // Create a namespace import for 'z'
-              const typePrefix = isTypeOnlyImport ? "type " : "";
-              const importSource = node.source.value; // Preserve the original import source ('zod' or 'zod/v4')
-              const namespaceImport = `import ${typePrefix}* as ${localName} from '${importSource}';\n`;
+                // Create a namespace import for the zod specifier
+                const typePrefix = isTypeOnlyImport ? "type " : "";
+                const namespaceImport = `import ${typePrefix}* as ${localName} from '${importSource}';\n`;
 
-              // Create a new import for the other specifiers
-              const otherImport = `import ${
-                isTypeOnlyImport ? "type " : ""
-              }{ ${otherSpecifiers
-                .map((s: TSESTree.ImportSpecifier) => {
-                  const localName = s.local.name;
-                  const importedName =
-                    s.imported.type === TSESTree.AST_NODE_TYPES.Identifier
-                      ? s.imported.name
-                      : "";
-                  // Preserve individual type imports when not a type-only import
-                  const typeModifier =
-                    !isTypeOnlyImport && s.importKind === "type" ? "type " : "";
-                  return localName === importedName
-                    ? `${typeModifier}${importedName}`
-                    : `${typeModifier}${importedName} as ${localName}`;
-                })
-                .join(", ")} } from '${importSource}';`;
+                // Create a new import for the other specifiers
+                const originalSource = node.source.value;
+                const otherImport = `import ${
+                  isTypeOnlyImport ? "type " : ""
+                }{ ${otherSpecifiers
+                  .map((s) => {
+                    const specifierLocalName = s.local.name;
+                    const specifierImportedName =
+                      s.imported.type === TSESTree.AST_NODE_TYPES.Identifier
+                        ? s.imported.name
+                        : "";
+                    // Preserve individual type imports when not a type-only import
+                    const typeModifier =
+                      !isTypeOnlyImport && s.importKind === "type"
+                        ? "type "
+                        : "";
+                    return specifierLocalName === specifierImportedName
+                      ? `${typeModifier}${specifierImportedName}`
+                      : `${typeModifier}${specifierImportedName} as ${specifierLocalName}`;
+                  })
+                  .join(", ")} } from '${originalSource}';`;
 
-              // Replace the entire import declaration
-              return fixer.replaceText(
-                node,
-                `${namespaceImport}${otherImport}`
-              );
-            } else {
-              // Simple case: just replace with a namespace import
-              // Check if this is a type-only import
-              const isTypeOnlyImport = node.importKind === "type";
-              const typePrefix = isTypeOnlyImport ? "type " : "";
-              const importSource = node.source.value; // Preserve the original import source ('zod' or 'zod/v4')
-              return fixer.replaceText(
-                node,
-                `import ${typePrefix}* as ${localName} from '${importSource}';`
-              );
-            }
-          },
-        });
+                // Replace the entire import declaration
+                return fixer.replaceText(
+                  node,
+                  `${namespaceImport}${otherImport}`
+                );
+              }
+            },
+          });
+        }
       },
     };
   },

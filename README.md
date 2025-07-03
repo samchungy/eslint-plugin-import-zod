@@ -62,6 +62,9 @@ import type { ZodError, z } from "zod";
 
 // Importing z with type modifiers
 import { type ZodError, z } from "zod";
+
+// Importing submodules from zod/v4
+import { core } from "zod/v4";
 ```
 
 #### ✅ Valid
@@ -84,6 +87,9 @@ import { ZodError } from "zod";
 
 // Type imports that don't include 'z'
 import type { ZodError } from "zod";
+
+// Importing submodule as namespace with proper path
+import * as core from "zod/v4/core";
 ```
 
 #### Auto-fix
@@ -92,6 +98,7 @@ This rule is automatically fixable. When using `--fix`, ESLint will:
 
 - Convert `import { z } from 'zod';` to `import * as z from 'zod';`
 - Convert `import type { z } from 'zod';` to `import type * as z from 'zod';`
+- Convert `import { core } from 'zod/v4';` to `import * as core from 'zod/v4/core';`
 - Split mixed imports like `import { ZodError, z } from 'zod';` into:
   ```js
   import * as z from "zod";
