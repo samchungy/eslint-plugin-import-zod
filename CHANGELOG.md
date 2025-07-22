@@ -1,5 +1,11 @@
 # eslint-plugin-import-zod
 
+## 1.1.1
+
+### Patch Changes
+
+- f7d476c: Fix ESM bundle
+
 ## 1.1.0
 
 ### Minor Changes
