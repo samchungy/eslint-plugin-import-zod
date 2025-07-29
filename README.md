@@ -3,7 +3,7 @@
 <a href="https://www.npmjs.com/package/eslint-plugin-import-zod"><img src="https://img.shields.io/npm/v/eslint-plugin-import-zod"/></a>
 <a href="https://nodejs.org/en/"><img src="https://img.shields.io/node/v/eslint-plugin-import-zod"/></a>
 
-ESLint plugin to enforce namespace imports for zod. This plugin provides a rule that ensures all imports of zod use the namespace import style (`import * as z from "zod";`) instead of named imports to promote better tree-shaking and reduce bundle sizes. See [this Zod issue comment](https://github.com/colinhacks/zod/issues/4433#issuecomment-2921500831) for a more detailed explanation.
+ESLint plugin to enforce namespace imports for zod. This plugin provides a rule that ensures all imports of zod use the namespace import style (`import * as z from "zod";`) instead of named imports or default imports to promote better tree-shaking and reduce bundle sizes. See [this Zod issue comment](https://github.com/colinhacks/zod/issues/4433#issuecomment-2921500831) for a more detailed explanation.
 
 ## Installation
 
@@ -37,7 +37,7 @@ export default [
 
 ### [`prefer-zod-namespace`](docs/rules/prefer-zod-namespace.md)
 
-This rule enforces using namespace imports for zod instead of named imports.
+This rule enforces using namespace imports for zod instead of named imports or default imports.
 
 #### ❌ Invalid
 
@@ -45,8 +45,22 @@ This rule enforces using namespace imports for zod instead of named imports.
 // Importing z directly
 import { z } from "zod";
 
+// Default imports (any name)
+import z from "zod";
+import zod from "zod";
+import zodSchema from "zod";
+
+// Type default imports
+import type z from "zod";
+import type zod from "zod";
+
+// Mixed default and named imports
+import z, { toJSONSchema } from "zod";
+import zod, { ZodError } from "zod";
+
 // Importing z from 'zod/v4'
 import { z } from "zod/v4";
+import z from "zod/v4";
 
 // Importing z from 'zod/v4-mini'
 import { z } from "zod/v4-mini";
@@ -73,6 +87,10 @@ import { core } from "zod/v4";
 // Using namespace import
 import * as z from "zod";
 
+// Using namespace import with any name
+import * as zod from "zod";
+import * as zodSchema from "zod";
+
 // Importing z from 'zod/v4'
 import * as z from "zod/v4";
 
@@ -81,6 +99,7 @@ import * as z from "zod/v4-mini";
 
 // Using type namespace import
 import type * as z from "zod";
+import type * as zod from "zod";
 
 // Other imports from zod that don't include 'z'
 import { ZodError } from "zod";
@@ -97,12 +116,20 @@ import * as core from "zod/v4/core";
 This rule is automatically fixable. When using `--fix`, ESLint will:
 
 - Convert `import { z } from 'zod';` to `import * as z from 'zod';`
+- Convert `import z from 'zod';` to `import * as z from 'zod';`
+- Convert `import zod from 'zod';` to `import * as zod from 'zod';`
+- Convert `import type z from 'zod';` to `import type * as z from 'zod';`
 - Convert `import type { z } from 'zod';` to `import type * as z from 'zod';`
 - Convert `import { core } from 'zod/v4';` to `import * as core from 'zod/v4/core';`
 - Split mixed imports like `import { ZodError, z } from 'zod';` into:
   ```js
   import * as z from "zod";
   import { ZodError } from "zod";
+  ```
+- Split default and named imports like `import z, { toJSONSchema } from 'zod';` into:
+  ```js
+  import * as z from "zod";
+  import { toJSONSchema } from "zod";
   ```
 - Split type imports like `import type { ZodError, z } from 'zod';` into:
   ```js

@@ -30,8 +30,7 @@ ruleTester.run("prefer-zod-namespace-import", rule, {
     "import { toJSONSchema } from 'zod';",
     // Other type imports from zod that don't include 'z' are valid
     "import type { toJSONSchema } from 'zod';",
-    // Default import would be valid (though zod doesn't have one)
-    "import zod from 'zod';",
+
     // Imports from other modules are valid
     "import { z } from 'not-zod';",
   ],
@@ -56,6 +55,66 @@ ruleTester.run("prefer-zod-namespace-import", rule, {
     {
       code: "import { z } from 'zod/v3';",
       output: "import * as z from 'zod/v3';",
+      errors: [{ messageId: "preferNamespaceImport" }],
+    },
+    // Default import cases
+    {
+      code: "import z from 'zod';",
+      output: "import * as z from 'zod';",
+      errors: [{ messageId: "preferNamespaceImport" }],
+    },
+    {
+      code: "import z from 'zod/v4';",
+      output: "import * as z from 'zod/v4';",
+      errors: [{ messageId: "preferNamespaceImport" }],
+    },
+    {
+      code: "import z from 'zod/v3';",
+      output: "import * as z from 'zod/v3';",
+      errors: [{ messageId: "preferNamespaceImport" }],
+    },
+    {
+      code: "import type z from 'zod';",
+      output: "import type * as z from 'zod';",
+      errors: [{ messageId: "preferNamespaceImport" }],
+    },
+    // Mixed default and named imports
+    {
+      code: "import z, { toJSONSchema } from 'zod';",
+      output: "import * as z from 'zod';\nimport { toJSONSchema } from 'zod';",
+      errors: [{ messageId: "preferNamespaceImport" }],
+    },
+    {
+      code: "import type z, { toJSONSchema } from 'zod';",
+      output:
+        "import type * as z from 'zod';\nimport type { toJSONSchema } from 'zod';",
+      errors: [{ messageId: "preferNamespaceImport" }],
+    },
+    // Default imports with any name should be converted
+    {
+      code: "import zod from 'zod';",
+      output: "import * as zod from 'zod';",
+      errors: [{ messageId: "preferNamespaceImport" }],
+    },
+    {
+      code: "import zodSchema from 'zod';",
+      output: "import * as zodSchema from 'zod';",
+      errors: [{ messageId: "preferNamespaceImport" }],
+    },
+    {
+      code: "import Z from 'zod';",
+      output: "import * as Z from 'zod';",
+      errors: [{ messageId: "preferNamespaceImport" }],
+    },
+    {
+      code: "import type zod from 'zod';",
+      output: "import type * as zod from 'zod';",
+      errors: [{ messageId: "preferNamespaceImport" }],
+    },
+    {
+      code: "import zod, { toJSONSchema } from 'zod';",
+      output:
+        "import * as zod from 'zod';\nimport { toJSONSchema } from 'zod';",
       errors: [{ messageId: "preferNamespaceImport" }],
     },
     // Submodule imports from zod/v4

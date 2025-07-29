@@ -1,6 +1,6 @@
 # Enforce namespace imports for zod (prefer-zod-namespace)
 
-This rule enforces using namespace imports for zod instead of named imports. Using namespace imports results in better tree-shaking and reduced bundle sizes.
+This rule enforces using namespace imports for zod instead of named imports or default imports. Using namespace imports results in better tree-shaking and reduced bundle sizes. All default imports from 'zod' are converted to namespace imports regardless of the import name.
 
 ## Rule Details
 
@@ -11,6 +11,19 @@ This rule aims to enforce a consistent pattern for importing zod.
 ```js
 // Importing z directly
 import { z } from "zod";
+
+// Default import
+import z from "zod";
+
+// Type default import
+import type z from "zod";
+
+// Mixed default and named imports
+import z, { toJSONSchema } from "zod";
+
+// Default imports with any name
+import zod from "zod";
+import zodSchema from "zod";
 
 // Type imports
 import type { z } from "zod";
