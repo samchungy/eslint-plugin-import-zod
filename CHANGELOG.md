@@ -1,5 +1,21 @@
 # eslint-plugin-import-zod
 
+## 1.2.0
+
+### Minor Changes
+
+- 01acb1c: Default imports are now converted to namespace imports
+
+  ```ts
+  import z from "zod";
+  ```
+
+  to
+
+  ```ts
+  import * as z from "zod";
+  ```
+
 ## 1.1.1
 
 ### Patch Changes
