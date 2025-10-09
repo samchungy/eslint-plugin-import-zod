@@ -19,7 +19,7 @@ import importZod from "eslint-plugin-import-zod";
 
 export default [
   // Include the plugin's recommended config
-  importZod.configs.recommended,
+  ...importZod.configs.recommended,
 
   // Or configure it manually
   {
