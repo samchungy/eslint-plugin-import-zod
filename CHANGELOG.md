@@ -1,5 +1,11 @@
 # eslint-plugin-import-zod
 
+## 1.2.1
+
+### Patch Changes
+
+- e6962fa: Fix types to be compatible with ESLint's `defineConfig` and release with trusted publishing
+
 ## 1.2.0
 
 ### Minor Changes
