@@ -1,5 +1,6 @@
 import preferZodNamespace from "./rules/prefer-zod-namespace";
 import { TSESLint } from "@typescript-eslint/utils";
+import type { ESLint, Linter } from "eslint";
 
 // Create the base plugin object
 const importZod = {
@@ -8,12 +9,14 @@ const importZod = {
     version: "1.0.0",
   },
   rules: {
-    "prefer-zod-namespace": preferZodNamespace,
+    "prefer-zod-namespace": preferZodNamespace as unknown as NonNullable<
+      ESLint.Plugin["rules"]
+    >[string],
   },
   configs: {} as {
-    recommended: TSESLint.FlatConfig.ConfigArray;
+    recommended: Linter.Config[];
   },
-};
+} satisfies ESLint.Plugin;
 
 Object.assign(
   importZod.configs as NonNullable<TSESLint.Linter.Plugin["configs"]>,
@@ -27,7 +30,7 @@ Object.assign(
           "import-zod/prefer-zod-namespace": "error",
         },
       },
-    ] satisfies TSESLint.FlatConfig.ConfigArray,
+    ] satisfies Linter.Config[],
   }
 );
 
