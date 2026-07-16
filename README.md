@@ -3,6 +3,8 @@
 <a href="https://www.npmjs.com/package/eslint-plugin-import-zod"><img src="https://img.shields.io/npm/v/eslint-plugin-import-zod"/></a>
 <a href="https://nodejs.org/en/"><img src="https://img.shields.io/node/v/eslint-plugin-import-zod"/></a>
 
+For Oxlint users please install [oxlint-plugin-import-zod](https://github.com/samchungy/oxlint-plugin-import-zod/)
+
 ESLint plugin to enforce namespace imports for zod. This plugin provides a rule that ensures all imports of zod use the namespace import style (`import * as z from "zod";`) instead of named imports or default imports to promote better tree-shaking and reduce bundle sizes. See [this Zod issue comment](https://github.com/colinhacks/zod/issues/4433#issuecomment-2921500831) for a more detailed explanation.
 
 ## Installation
